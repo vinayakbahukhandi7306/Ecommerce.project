@@ -7,6 +7,7 @@ import com.vinayak.ecommerce.repository.UserRepository;
 import com.vinayak.ecommerce.service.UserService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.vinayak.ecommerce.exception.EmailAlreadyExistsException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,7 +25,7 @@ public class UserServiceImpl implements UserService {
     public void register(RegisterRequest request) {
 
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
 
         User user = new User();
