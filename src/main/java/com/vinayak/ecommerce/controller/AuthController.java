@@ -2,6 +2,8 @@ package com.vinayak.ecommerce.controller;
 
 import com.vinayak.ecommerce.dto.RegisterRequest;
 import com.vinayak.ecommerce.service.UserService;
+import com.vinayak.ecommerce.dto.AuthResponse;
+import com.vinayak.ecommerce.dto.LoginRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,5 +25,12 @@ public class AuthController {
         userService.register(request);
 
         return new ResponseEntity<>("User Registered Successfully", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<AuthResponse> login(
+            @Valid @RequestBody LoginRequest request) {
+
+        return ResponseEntity.ok(userService.login(request));
     }
 }
