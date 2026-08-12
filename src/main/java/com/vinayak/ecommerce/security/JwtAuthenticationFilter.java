@@ -39,28 +39,38 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String token = authHeader.substring(7);
 
-            String email = jwtService.extractUsername(token);
+            try {
 
-            System.out.println("JWT Token: " + token);
-            System.out.println("Extracted Email: " + email);
+                String email = jwtService.extractUsername(token);
 
-            userRepository.findByEmail(email)
-                    .ifPresent(user -> {
+                userRepository.findByEmail(email)
+                        .ifPresent(user -> {
 
-                        UsernamePasswordAuthenticationToken authentication =
-                                new UsernamePasswordAuthenticationToken(
-                                        user,
-                                        null,
-                                        user.getAuthorities()
+                            if (jwtService.isTokenValid(token, user)) {
+
+                                UsernamePasswordAuthenticationToken authentication =
+                                        new UsernamePasswordAuthenticationToken(
+                                                user,
+                                                null,
+                                                user.getAuthorities()
+                                        );
+
+                                SecurityContextHolder.getContext()
+                                        .setAuthentication(authentication);
+
+                                System.out.println(
+                                        "User Authenticated: " + user.getEmail()
                                 );
+                            }
+                        });
 
-                        SecurityContextHolder.getContext()
-                                .setAuthentication(authentication);
+            } catch (Exception e) {
 
-                        System.out.println(
-                                "User Authenticated: " + user.getEmail()
-                        );
-                    });
+                System.out.println("JWT ERROR: " + e.getClass().getSimpleName());
+                System.out.println("JWT ERROR MESSAGE: " + e.getMessage());
+
+                SecurityContextHolder.clearContext();
+            }
         }
 
         filterChain.doFilter(request, response);
