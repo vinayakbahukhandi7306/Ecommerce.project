@@ -6,7 +6,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-
+import com.vinayak.ecommerce.exception.CartNotFoundException;
+import com.vinayak.ecommerce.exception.CartItemNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -81,5 +82,33 @@ public class GlobalExceptionHandler {
                 ex.getMessage(),
                 HttpStatus.BAD_REQUEST
         );
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCartNotFound(
+            CartNotFoundException ex) {
+
+        Map<String, String> response = new HashMap<>();
+
+        response.put("error", "Cart Not Found");
+        response.put("message", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+    @ExceptionHandler(CartItemNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleCartItemNotFound(
+            CartItemNotFoundException ex) {
+
+        Map<String, String> response = new HashMap<>();
+
+        response.put("error", "Cart Item Not Found");
+        response.put("message", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
     }
 }
