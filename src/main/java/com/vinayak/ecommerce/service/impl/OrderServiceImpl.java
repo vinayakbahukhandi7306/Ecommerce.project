@@ -123,6 +123,40 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
+    public void cancelOrder(Long orderId) {
+
+        User currentUser = securityService.getCurrentUser();
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new OrderNotFoundException("Order not found"));
+
+        if (!order.getUser().getId().equals(currentUser.getId())) {
+            throw new OrderAccessDeniedException(
+                    "You are not allowed to cancel this order"
+            );
+        }
+
+        if (order.getStatus() != OrderStatus.PLACED) {
+            throw new IllegalStateException(
+                    "Only placed orders can be cancelled"
+            );
+        }
+
+        order.setStatus(OrderStatus.CANCELLED);
+
+        Product product = order.getProduct();
+
+        product.setStock(
+                product.getStock() + order.getQuantity()
+        );
+
+        productRepository.save(product);
+        orderRepository.save(order);
+    }
+
+    @Override
     public OrderResponse getOrderById(Long orderId) {
 
         User currentUser = securityService.getCurrentUser();

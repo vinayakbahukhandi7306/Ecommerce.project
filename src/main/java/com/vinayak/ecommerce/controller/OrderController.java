@@ -78,4 +78,13 @@ public class OrderController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{orderId}/cancel")
+    public ResponseEntity<Void> cancelOrder(
+            @PathVariable Long orderId) {
+
+        orderService.cancelOrder(orderId);
+
+        return ResponseEntity.noContent().build();
+    }
 }
