@@ -9,6 +9,7 @@ import com.vinayak.ecommerce.entity.Product;
 import com.vinayak.ecommerce.entity.User;
 import com.vinayak.ecommerce.enums.OrderStatus;
 import com.vinayak.ecommerce.exception.CartNotFoundException;
+import com.vinayak.ecommerce.exception.InvalidOrderStatusException;
 import com.vinayak.ecommerce.exception.InsufficientStockException;
 import com.vinayak.ecommerce.exception.InvalidQuantityException;
 import com.vinayak.ecommerce.exception.OrderAccessDeniedException;
@@ -139,7 +140,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         if (order.getStatus() != OrderStatus.PLACED) {
-            throw new IllegalStateException(
+            throw new InvalidOrderStatusException(
                     "Only placed orders can be cancelled"
             );
         }

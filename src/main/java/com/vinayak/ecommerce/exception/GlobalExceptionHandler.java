@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.vinayak.ecommerce.exception.CartNotFoundException;
 import com.vinayak.ecommerce.exception.CartItemNotFoundException;
+import com.vinayak.ecommerce.exception.InvalidOrderStatusException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -109,6 +110,20 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
+                .body(response);
+    }
+
+    @ExceptionHandler(InvalidOrderStatusException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidOrderStatus(
+            InvalidOrderStatusException ex) {
+
+        Map<String, String> response = new HashMap<>();
+
+        response.put("error", "Invalid Order Status");
+        response.put("message", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
                 .body(response);
     }
 }
