@@ -2,6 +2,8 @@ package com.vinayak.ecommerce.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import com.vinayak.ecommerce.enums.OrderStatus;
+
 
 public class OrderResponse {
 
@@ -11,6 +13,7 @@ public class OrderResponse {
     private Integer quantity;
     private BigDecimal totalPrice;
     private LocalDateTime createdAt;
+    private OrderStatus status;
 
     public OrderResponse() {
     }
@@ -21,7 +24,8 @@ public class OrderResponse {
             String productName,
             Integer quantity,
             BigDecimal totalPrice,
-            LocalDateTime createdAt) {
+            LocalDateTime createdAt,
+            OrderStatus status) {
 
         this.id = id;
         this.productId = productId;
@@ -29,6 +33,7 @@ public class OrderResponse {
         this.quantity = quantity;
         this.totalPrice = totalPrice;
         this.createdAt = createdAt;
+        this.status = status;
     }
 
     public Long getId() {
@@ -53,5 +58,9 @@ public class OrderResponse {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
     }
 }

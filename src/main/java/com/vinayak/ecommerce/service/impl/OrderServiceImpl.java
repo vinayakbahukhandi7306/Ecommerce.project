@@ -1,20 +1,27 @@
 package com.vinayak.ecommerce.service.impl;
 
+import com.vinayak.ecommerce.dto.CheckoutResponse;
 import com.vinayak.ecommerce.dto.OrderResponse;
+import com.vinayak.ecommerce.entity.Cart;
+import com.vinayak.ecommerce.entity.CartItem;
 import com.vinayak.ecommerce.entity.Order;
 import com.vinayak.ecommerce.entity.Product;
 import com.vinayak.ecommerce.entity.User;
+import com.vinayak.ecommerce.enums.OrderStatus;
+import com.vinayak.ecommerce.exception.CartNotFoundException;
+import com.vinayak.ecommerce.exception.InsufficientStockException;
+import com.vinayak.ecommerce.exception.InvalidQuantityException;
+import com.vinayak.ecommerce.exception.OrderAccessDeniedException;
+import com.vinayak.ecommerce.exception.OrderNotFoundException;
+import com.vinayak.ecommerce.exception.ProductNotFoundException;
+import com.vinayak.ecommerce.repository.CartRepository;
 import com.vinayak.ecommerce.repository.OrderRepository;
 import com.vinayak.ecommerce.repository.ProductRepository;
 import com.vinayak.ecommerce.security.SecurityService;
 import com.vinayak.ecommerce.service.OrderService;
 import org.springframework.stereotype.Service;
-import com.vinayak.ecommerce.exception.OrderAccessDeniedException;
-import com.vinayak.ecommerce.exception.ProductNotFoundException;
-import com.vinayak.ecommerce.exception.OrderNotFoundException;
-import com.vinayak.ecommerce.exception.InvalidQuantityException;
-import com.vinayak.ecommerce.exception.InsufficientStockException;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,15 +32,18 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
     private final SecurityService securityService;
+    private final CartRepository cartRepository;
 
     public OrderServiceImpl(
             OrderRepository orderRepository,
             ProductRepository productRepository,
-            SecurityService securityService) {
+            SecurityService securityService,
+            CartRepository cartRepository) {
 
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.securityService = securityService;
+        this.cartRepository = cartRepository;
     }
 
     @Override
@@ -69,6 +79,7 @@ public class OrderServiceImpl implements OrderService {
         order.setQuantity(quantity);
         order.setTotalPrice(totalPrice);
         order.setCreatedAt(LocalDateTime.now());
+        order.setStatus(OrderStatus.PLACED);
 
         product.setStock(product.getStock() - quantity);
         productRepository.save(product);
@@ -89,16 +100,26 @@ public class OrderServiceImpl implements OrderService {
                 .toList();
     }
 
-    private OrderResponse convertToResponse(Order order) {
+    @Override
+    public List<OrderResponse> getAllOrders() {
 
-        return new OrderResponse(
-                order.getId(),
-                order.getProduct().getId(),
-                order.getProduct().getName(),
-                order.getQuantity(),
-                order.getTotalPrice(),
-                order.getCreatedAt()
-        );
+        return orderRepository.findAll()
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
+    }
+
+    @Override
+    @Transactional
+    public void updateOrderStatus(Long orderId, OrderStatus status) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new OrderNotFoundException("Order not found"));
+
+        order.setStatus(status);
+
+        orderRepository.save(order);
     }
 
     @Override
@@ -117,5 +138,90 @@ public class OrderServiceImpl implements OrderService {
         }
 
         return convertToResponse(order);
+    }
+
+    @Override
+    @Transactional
+    public CheckoutResponse checkout() {
+
+        User currentUser = securityService.getCurrentUser();
+
+        Cart cart = cartRepository.findByUser(currentUser)
+                .orElseThrow(() ->
+                        new CartNotFoundException("Cart not found"));
+
+        List<CartItem> cartItems = cart.getItems();
+
+        if (cartItems.isEmpty()) {
+            throw new InvalidQuantityException("Cart is empty");
+        }
+
+        // Validate stock for every item first
+        for (CartItem cartItem : cartItems) {
+
+            Product product = cartItem.getProduct();
+
+            if (product.getStock() < cartItem.getQuantity()) {
+                throw new InsufficientStockException(
+                        "Insufficient stock for product: "
+                                + product.getName()
+                );
+            }
+        }
+
+        // Create orders and reduce stock
+        List<OrderResponse> orderResponses = cartItems.stream()
+                .map(cartItem -> {
+
+                    Product product = cartItem.getProduct();
+                    Integer quantity = cartItem.getQuantity();
+
+                    BigDecimal totalPrice =
+                            product.getPrice()
+                                    .multiply(BigDecimal.valueOf(quantity));
+
+                    Order order = new Order();
+
+                    order.setUser(currentUser);
+                    order.setProduct(product);
+                    order.setQuantity(quantity);
+                    order.setTotalPrice(totalPrice);
+                    order.setCreatedAt(LocalDateTime.now());
+                    order.setStatus(OrderStatus.PLACED);
+
+                    product.setStock(
+                            product.getStock() - quantity
+                    );
+
+                    productRepository.save(product);
+
+                    Order savedOrder =
+                            orderRepository.save(order);
+
+                    return convertToResponse(savedOrder);
+                })
+                .toList();
+
+        // Clear cart after successful order creation
+        cart.getItems().clear();
+        cartRepository.save(cart);
+
+        return new CheckoutResponse(
+                "Checkout successful",
+                orderResponses
+        );
+    }
+
+    private OrderResponse convertToResponse(Order order) {
+
+        return new OrderResponse(
+                order.getId(),
+                order.getProduct().getId(),
+                order.getProduct().getName(),
+                order.getQuantity(),
+                order.getTotalPrice(),
+                order.getCreatedAt(),
+                order.getStatus()
+        );
     }
 }

@@ -1,7 +1,7 @@
 package com.vinayak.ecommerce.entity;
 
 import jakarta.persistence.*;
-
+import com.vinayak.ecommerce.enums.OrderStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -29,6 +29,10 @@ public class Order {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus status;
 
     public Order() {
     }
@@ -79,5 +83,13 @@ public class Order {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
     }
 }
