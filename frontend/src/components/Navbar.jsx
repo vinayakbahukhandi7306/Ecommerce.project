@@ -3,7 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
 function Navbar() {
-  const { isLoggedIn, logout } = useAuth();
+  const { isLoggedIn, isAdmin, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
@@ -20,12 +20,16 @@ function Navbar() {
       {isLoggedIn && (
         <>
           <Link to="/cart">Cart</Link>
-
           <Link to="/orders">Orders</Link>
 
-          <button onClick={handleLogout}>
-            Logout
-          </button>
+          {isAdmin && (
+            <>
+              <Link to="/admin/dashboard">Admin Dashboard</Link>
+              <Link to="/admin/products">Admin Products</Link>
+            </>
+          )}
+
+          <button onClick={handleLogout}>Logout</button>
         </>
       )}
 

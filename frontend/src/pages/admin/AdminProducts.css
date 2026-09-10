@@ -1,0 +1,163 @@
+.admin-products {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.admin-products-header {
+  margin-bottom: 30px;
+}
+
+.admin-products-header h1 {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.admin-products-header p {
+  color: #666;
+}
+
+.admin-products-error {
+  color: #dc3545;
+  margin-bottom: 20px;
+}
+
+.product-form-card {
+  padding: 25px;
+  margin-bottom: 40px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.product-form-card h2,
+.admin-products-list h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+.product-form-card form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: end;
+}
+
+.admin-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.admin-form-group label {
+  font-weight: 500;
+}
+
+.admin-form-group input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  box-sizing: border-box;
+}
+
+.admin-form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.admin-form-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+}
+
+.admin-form-actions button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.admin-form-actions button:hover {
+  background: #0056b3;
+}
+
+.admin-form-actions button[type="button"] {
+  background: #eee;
+  color: #333;
+}
+
+.admin-form-actions button[type="button"]:hover {
+  background: #ddd;
+}
+
+.products-table-wrapper {
+  overflow-x: auto;
+}
+
+.products-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.products-table th,
+.products-table td {
+  padding: 14px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.products-table th {
+  background: #f5f5f5;
+  font-weight: 600;
+}
+
+.products-table tbody tr:hover {
+  background: #fafafa;
+}
+
+.edit-btn,
+.delete-btn {
+  padding: 7px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 8px;
+}
+
+.edit-btn {
+  background: #eee;
+  color: #333;
+}
+
+.edit-btn:hover {
+  background: #ddd;
+}
+
+.delete-btn {
+  background: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background: #b02a37;
+}
+
+@media (max-width: 800px) {
+  .admin-products {
+    padding: 25px 15px;
+  }
+
+  .product-form-card form {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-form-actions {
+    grid-column: auto;
+  }
+}
