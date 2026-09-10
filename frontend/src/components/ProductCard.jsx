@@ -1,31 +1,48 @@
 import api from "../services/api";
+import "./ProductCard.css";
 
 function ProductCard({ product }) {
-
   const handleAddToCart = async () => {
     try {
-      await api.post(`/api/cart?productId=${product.id}&quantity=1`);
+      await api.post(
+        `/api/cart?productId=${product.id}&quantity=1`
+      );
 
       alert("Product added to cart!");
     } catch (error) {
       console.error(error);
 
       alert(
-        error.response?.data?.message || "Failed to add product to cart"
+        error.response?.data?.message ||
+          "Failed to add product to cart"
       );
     }
   };
 
   return (
-    <div>
-      <h2>{product.name}</h2>
+    <div className="product-card">
+      <div className="product-info">
+        <h2>{product.name}</h2>
 
-      <p>Price: ₹{product.price}</p>
+        <p className="product-price">
+          ₹{product.price}
+        </p>
 
-      <p>Stock: {product.stock}</p>
+        <p className="product-stock">
+          {product.stock > 0
+            ? `${product.stock} in stock`
+            : "Out of stock"}
+        </p>
+      </div>
 
-      <button onClick={handleAddToCart}>
-        Add to Cart
+      <button
+        className="add-cart-btn"
+        onClick={handleAddToCart}
+        disabled={product.stock <= 0}
+      >
+        {product.stock > 0
+          ? "Add to Cart"
+          : "Out of Stock"}
       </button>
     </div>
   );

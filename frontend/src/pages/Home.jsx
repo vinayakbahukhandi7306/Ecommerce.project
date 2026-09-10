@@ -1,53 +1,59 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import "./Home.css";
 
 function Home() {
   const { isLoggedIn, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
-    alert("Logged out successfully!");
   };
 
   return (
-    <div>
-      <h1>E-Commerce App</h1>
+    <div className="home">
+      <section className="hero">
+        <h1>Welcome to E-Commerce</h1>
 
-      <p>Welcome to our store!</p>
+        <p>
+          Discover great products and shop with ease.
+        </p>
 
-      {!isLoggedIn && (
-        <div>
-          <Link to="/login">
-            <button>Login</button>
-          </Link>
-        </div>
-      )}
-
-      {isLoggedIn && (
-        <div>
-          <button onClick={handleLogout}>
-            Logout
-          </button>
-        </div>
-      )}
-
-      <div>
         <Link to="/products">
-          <button>View Products</button>
+          <button className="primary-btn">
+            Start Shopping
+          </button>
         </Link>
-      </div>
+      </section>
 
-      <div>
-        <Link to="/cart">
-          <button>View Cart</button>
-        </Link>
-      </div>
+      <section className="home-actions">
+        {!isLoggedIn && (
+          <>
+            <Link to="/login">
+              <button>Login</button>
+            </Link>
 
-      <div>
-        <Link to="/orders">
-          <button>My Orders</button>
-        </Link>
-      </div>
+            <Link to="/register">
+              <button>Register</button>
+            </Link>
+          </>
+        )}
+
+        {isLoggedIn && (
+          <>
+            <Link to="/cart">
+              <button>View Cart</button>
+            </Link>
+
+            <Link to="/orders">
+              <button>My Orders</button>
+            </Link>
+
+            <button onClick={handleLogout}>
+              Logout
+            </button>
+          </>
+        )}
+      </section>
     </div>
   );
 }

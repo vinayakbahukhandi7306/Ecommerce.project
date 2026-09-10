@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../services/api";
 import ProductCard from "../components/ProductCard";
+import "./Products.css";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -22,27 +23,32 @@ function Products() {
   };
 
   return (
-    <div>
-      <h1>Products</h1>
+    <div className="products-page">
+      <div className="products-header">
+        <div>
+          <h1>Our Products</h1>
+          <p>Browse our collection and find what you need.</p>
+        </div>
 
-      <Link to="/cart">
-        <button>View Cart</button>
-      </Link>
+        <Link to="/cart">
+          <button className="cart-btn">View Cart</button>
+        </Link>
+      </div>
 
-      <hr />
-
-      {error && <p>{error}</p>}
+      {error && <p className="error-message">{error}</p>}
 
       {products.length === 0 && !error && (
-        <p>No products available.</p>
+        <p className="empty-message">No products available.</p>
       )}
 
-      {products.map((product) => (
-        <ProductCard
-          key={product.id}
-          product={product}
-        />
-      ))}
+      <div className="products-grid">
+        {products.map((product) => (
+          <ProductCard
+            key={product.id}
+            product={product}
+          />
+        ))}
+      </div>
     </div>
   );
 }

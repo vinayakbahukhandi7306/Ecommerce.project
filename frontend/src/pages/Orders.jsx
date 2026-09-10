@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
+import "./Orders.css";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
@@ -20,32 +21,69 @@ function Orders() {
   };
 
   return (
-    <div>
-      <h1>My Orders</h1>
+    <div className="orders-page">
+      <div className="orders-container">
+        <h1>My Orders</h1>
 
-      {error && <p>{error}</p>}
+        {error && (
+          <p className="orders-error">
+            {error}
+          </p>
+        )}
 
-      {orders.length === 0 && !error && (
-        <p>You have no orders.</p>
-      )}
+        {orders.length === 0 && !error && (
+          <div className="empty-orders">
+            <h2>No Orders Yet</h2>
 
-      {orders.map((order) => (
-        <div key={order.id}>
-          <h2>Order #{order.id}</h2>
+            <p>
+              You haven't placed any orders yet.
+            </p>
+          </div>
+        )}
 
-          <p>Product: {order.productName}</p>
+        {orders.length > 0 && (
+          <div className="orders-list">
+            {orders.map((order) => (
+              <div
+                className="order-card"
+                key={order.id}
+              >
+                <div className="order-header">
+                  <h2>Order #{order.id}</h2>
 
-          <p>Quantity: {order.quantity}</p>
+                  <span
+                    className={`order-status ${order.status.toLowerCase()}`}
+                  >
+                    {order.status}
+                  </span>
+                </div>
 
-          <p>Total: ₹{order.totalPrice}</p>
+                <div className="order-details">
+                  <p>
+                    <strong>Product:</strong>{" "}
+                    {order.productName}
+                  </p>
 
-          <p>Status: {order.status}</p>
+                  <p>
+                    <strong>Quantity:</strong>{" "}
+                    {order.quantity}
+                  </p>
 
-          <p>Ordered: {order.createdAt}</p>
+                  <p>
+                    <strong>Total:</strong> ₹
+                    {order.totalPrice}
+                  </p>
 
-          <hr />
-        </div>
-      ))}
+                  <p>
+                    <strong>Ordered:</strong>{" "}
+                    {order.createdAt}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
