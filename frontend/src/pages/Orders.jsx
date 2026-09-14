@@ -20,34 +20,41 @@ function Orders() {
     }
   };
 
+  const handleCancelOrder = async (orderId) => {
+    try {
+      await api.put(`/api/orders/${orderId}/cancel`);
+
+      alert("Order cancelled successfully!");
+
+      await fetchOrders();
+    } catch (error) {
+      console.error(error);
+
+      alert(
+        error.response?.data?.message ||
+          "Failed to cancel order"
+      );
+    }
+  };
+
   return (
     <div className="orders-page">
       <div className="orders-container">
         <h1>My Orders</h1>
 
-        {error && (
-          <p className="orders-error">
-            {error}
-          </p>
-        )}
+        {error && <p className="orders-error">{error}</p>}
 
         {orders.length === 0 && !error && (
           <div className="empty-orders">
             <h2>No Orders Yet</h2>
-
-            <p>
-              You haven't placed any orders yet.
-            </p>
+            <p>You haven't placed any orders yet.</p>
           </div>
         )}
 
         {orders.length > 0 && (
           <div className="orders-list">
             {orders.map((order) => (
-              <div
-                className="order-card"
-                key={order.id}
-              >
+              <div className="order-card" key={order.id}>
                 <div className="order-header">
                   <h2>Order #{order.id}</h2>
 
@@ -70,8 +77,8 @@ function Orders() {
                   </p>
 
                   <p>
-                    <strong>Total:</strong> ₹
-                    {order.totalPrice}
+                    <strong>Total:</strong>{" "}
+                    ₹{order.totalPrice}
                   </p>
 
                   <p>
@@ -79,6 +86,17 @@ function Orders() {
                     {order.createdAt}
                   </p>
                 </div>
+
+                {order.status === "PLACED" && (
+                  <button
+                    className="cancel-order-btn"
+                    onClick={() =>
+                      handleCancelOrder(order.id)
+                    }
+                  >
+                    Cancel Order
+                  </button>
+                )}
               </div>
             ))}
           </div>

@@ -67,6 +67,7 @@ function AdminProducts() {
       }
 
       resetForm();
+      setError("");
       await fetchProducts();
     } catch (error) {
       console.error(error);
@@ -86,12 +87,15 @@ function AdminProducts() {
       price: product.price,
       stock: product.stock,
     });
+
+    setError("");
   };
 
   const handleDelete = async (productId) => {
     try {
       await api.delete(`/api/products/${productId}`);
 
+      setError("");
       await fetchProducts();
     } catch (error) {
       console.error(error);
@@ -115,9 +119,19 @@ function AdminProducts() {
       )}
 
       <div className="product-form-card">
-        <h2>
-          {editingId ? "Edit Product" : "Add Product"}
-        </h2>
+        <div className="product-form-header">
+          <div>
+            <h2>
+              {editingId ? "Edit Product" : "Add Product"}
+            </h2>
+
+            <p>
+              {editingId
+                ? "Update the selected product."
+                : "Add a new product to your store."}
+            </p>
+          </div>
+        </div>
 
         <form onSubmit={handleSubmit}>
           <div className="admin-form-group">
@@ -180,7 +194,12 @@ function AdminProducts() {
       </div>
 
       <div className="admin-products-list">
-        <h2>Products</h2>
+        <div className="products-list-header">
+          <div>
+            <h2>Products</h2>
+            <p>{products.length} product(s) in store</p>
+          </div>
+        </div>
 
         {products.length === 0 ? (
           <p>No products found.</p>
@@ -201,9 +220,24 @@ function AdminProducts() {
                 {products.map((product) => (
                   <tr key={product.id}>
                     <td>{product.id}</td>
-                    <td>{product.name}</td>
+
+                    <td className="product-name">
+                      {product.name}
+                    </td>
+
                     <td>₹{product.price}</td>
-                    <td>{product.stock}</td>
+
+                    <td>
+                      <span
+                        className={
+                          product.stock > 0
+                            ? "stock-badge stock-available"
+                            : "stock-badge stock-empty"
+                        }
+                      >
+                        {product.stock}
+                      </span>
+                    </td>
 
                     <td>
                       <button

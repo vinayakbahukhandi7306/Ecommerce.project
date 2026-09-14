@@ -10,38 +10,57 @@ function Navbar() {
   };
 
   return (
-    <nav>
-      <Link to="/">
-        <strong>E-Commerce</strong>
+    <nav className="navbar">
+      <Link to="/" className="navbar-brand">
+        E-Commerce
       </Link>
 
-      <Link to="/products">Products</Link>
+      <div className="navbar-links">
+        <Link to="/products">Products</Link>
 
-      {isLoggedIn && (
-        <>
-          <Link to="/cart">Cart</Link>
-          <Link to="/orders">Orders</Link>
+        {isLoggedIn && (
+          <>
+            <Link to="/cart">Cart</Link>
+            <Link to="/orders">Orders</Link>
 
-          {isAdmin && (
-            <>
-              <Link to="/admin/dashboard">Admin Dashboard</Link>
-              <Link to="/admin/products">Admin Products</Link>
-              <Link to="/admin/orders">Admin Orders</Link>
-              <Link to="/admin/customers">Admin Customers</Link>
-            </>
-          )}
+            {isAdmin && (
+              <div className="admin-nav">
+                <span className="admin-label">Admin</span>
 
-          <button onClick={handleLogout}>Logout</button>
-        </>
-      )}
+                <Link to="/admin/dashboard">
+                  Dashboard
+                </Link>
 
-      {!isLoggedIn && (
-        <>
-          <Link to="/login">Login</Link>
+                <Link to="/admin/products">
+                  Products
+                </Link>
 
-          <Link to="/register">Register</Link>
-        </>
-      )}
+                <Link to="/admin/orders">
+                  Orders
+                </Link>
+
+                <Link to="/admin/customers">
+                  Customers
+                </Link>
+              </div>
+            )}
+
+            <button
+              className="logout-btn"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+          </>
+        )}
+
+        {!isLoggedIn && (
+          <>
+            <Link to="/login">Login</Link>
+            <Link to="/register">Register</Link>
+          </>
+        )}
+      </div>
     </nav>
   );
 }

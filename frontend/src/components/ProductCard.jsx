@@ -7,8 +7,6 @@ function ProductCard({ product }) {
       await api.post(
         `/api/cart?productId=${product.id}&quantity=1`
       );
-
-      alert("Product added to cart!");
     } catch (error) {
       console.error(error);
 
@@ -28,10 +26,16 @@ function ProductCard({ product }) {
           ₹{product.price}
         </p>
 
-        <p className="product-stock">
+        <p
+          className={
+            product.stock > 0
+              ? "product-stock in-stock"
+              : "product-stock out-of-stock"
+          }
+        >
           {product.stock > 0
-            ? `${product.stock} in stock`
-            : "Out of stock"}
+            ? "In Stock"
+            : "Out of Stock"}
         </p>
       </div>
 

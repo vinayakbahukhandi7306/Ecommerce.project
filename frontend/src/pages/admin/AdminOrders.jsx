@@ -30,6 +30,7 @@ function AdminOrders() {
         { status }
       );
 
+      setError("");
       await fetchOrders();
     } catch (error) {
       console.error(error);
@@ -37,6 +38,21 @@ function AdminOrders() {
         error.response?.data?.message ||
           "Failed to update order status"
       );
+    }
+  };
+
+  const getStatusClass = (status) => {
+    switch (status) {
+      case "PLACED":
+        return "status-badge status-placed";
+      case "SHIPPED":
+        return "status-badge status-shipped";
+      case "DELIVERED":
+        return "status-badge status-delivered";
+      case "CANCELLED":
+        return "status-badge status-cancelled";
+      default:
+        return "status-badge";
     }
   };
 
@@ -52,7 +68,10 @@ function AdminOrders() {
       )}
 
       {orders.length === 0 ? (
-        <p>No orders found.</p>
+        <div className="empty-orders">
+          <h2>No orders found</h2>
+          <p>There are currently no customer orders.</p>
+        </div>
       ) : (
         <div className="orders-table-wrapper">
           <table className="orders-table">
@@ -64,21 +83,34 @@ function AdminOrders() {
                 <th>Quantity</th>
                 <th>Total</th>
                 <th>Status</th>
+                <th>Update</th>
               </tr>
             </thead>
 
             <tbody>
               {orders.map((order) => (
                 <tr key={order.id}>
-                  <td>#{order.id}</td>
+                  <td className="order-id">
+                    #{order.id}
+                  </td>
 
                   <td>{order.userEmail}</td>
 
-                  <td>{order.productName}</td>
+                  <td className="order-product">
+                    {order.productName}
+                  </td>
 
                   <td>{order.quantity}</td>
 
-                  <td>₹{order.totalPrice}</td>
+                  <td className="order-total">
+                    ₹{order.totalPrice}
+                  </td>
+
+                  <td>
+                    <span className={getStatusClass(order.status)}>
+                      {order.status}
+                    </span>
+                  </td>
 
                   <td>
                     <select

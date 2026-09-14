@@ -27,8 +27,10 @@ function AdminCustomers() {
   return (
     <div className="admin-customers">
       <div className="admin-customers-header">
-        <h1>Customer Management</h1>
-        <p>View registered customers in your store.</p>
+        <div>
+          <h1>Customer Management</h1>
+          <p>View registered customers in your store.</p>
+        </div>
       </div>
 
       {error && (
@@ -36,31 +38,48 @@ function AdminCustomers() {
       )}
 
       {customers.length === 0 ? (
-        <p>No customers found.</p>
-      ) : (
-        <div className="customers-table-wrapper">
-          <table className="customers-table">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {customers.map((customer) => (
-                <tr key={customer.id}>
-                  <td>{customer.id}</td>
-                  <td>
-                    {customer.firstName} {customer.lastName}
-                  </td>
-                  <td>{customer.email}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+        <div className="empty-customers">
+          <h2>No customers found</h2>
+          <p>There are currently no registered customers.</p>
         </div>
+      ) : (
+        <>
+          <div className="customers-summary">
+            <span>
+              {customers.length} registered customer
+              {customers.length !== 1 ? "s" : ""}
+            </span>
+          </div>
+
+          <div className="customers-table-wrapper">
+            <table className="customers-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Customer</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {customers.map((customer) => (
+                  <tr key={customer.id}>
+                    <td className="customer-id">
+                      #{customer.id}
+                    </td>
+
+                    <td className="customer-name">
+                      {customer.firstName}{" "}
+                      {customer.lastName}
+                    </td>
+
+                    <td>{customer.email}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
       )}
     </div>
   );

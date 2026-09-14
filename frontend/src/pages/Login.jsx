@@ -22,7 +22,7 @@ function Login() {
 
       login(response.data.token);
 
-      alert("Login successful!");
+    
 
       navigate("/");
     } catch (error) {

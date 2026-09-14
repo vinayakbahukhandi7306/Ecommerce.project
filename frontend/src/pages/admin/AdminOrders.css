@@ -9,52 +9,134 @@
 }
 
 .admin-orders-header h1 {
+  margin: 0 0 8px;
   font-size: 36px;
-  margin-bottom: 8px;
+  color: #222;
 }
 
 .admin-orders-header p {
+  margin: 0;
   color: #666;
+  font-size: 16px;
 }
 
 .admin-orders-error {
-  color: #dc3545;
+  padding: 12px 15px;
   margin-bottom: 20px;
+  border: 1px solid #f1b0b7;
+  border-radius: 7px;
+  background: #f8d7da;
+  color: #842029;
 }
 
 .orders-table-wrapper {
   overflow-x: auto;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
 }
 
 .orders-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  border: 1px solid #ddd;
 }
 
 .orders-table th,
 .orders-table td {
   padding: 14px;
   text-align: left;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #e5e5e5;
+  white-space: nowrap;
 }
 
 .orders-table th {
-  background: #f5f5f5;
+  background: #f7f7f7;
+  font-size: 14px;
   font-weight: 600;
+  color: #444;
+}
+
+.orders-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .orders-table tbody tr:hover {
   background: #fafafa;
 }
 
+.order-id {
+  font-weight: 600;
+  color: #555;
+}
+
+.order-product {
+  font-weight: 600;
+  color: #222;
+}
+
+.order-total {
+  font-weight: 600;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 5px 9px;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-placed {
+  background: #fff3cd;
+  color: #664d03;
+}
+
+.status-shipped {
+  background: #cfe2ff;
+  color: #084298;
+}
+
+.status-delivered {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.status-cancelled {
+  background: #f8d7da;
+  color: #842029;
+}
+
 .orders-table select {
   padding: 7px 10px;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 6px;
   background: white;
+  color: #333;
+  font-size: 13px;
   cursor: pointer;
+}
+
+.orders-table select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.empty-orders {
+  padding: 50px 20px;
+  border: 1px solid #e5e5e5;
+  border-radius: 10px;
+  background: white;
+  text-align: center;
+}
+
+.empty-orders h2 {
+  margin: 0 0 8px;
+  color: #333;
+}
+
+.empty-orders p {
+  margin: 0;
+  color: #777;
 }
 
 @media (max-width: 800px) {

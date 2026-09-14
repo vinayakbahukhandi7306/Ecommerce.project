@@ -1,35 +1,103 @@
-nav {
+.navbar {
   display: flex;
   align-items: center;
-  gap: 25px;
-  padding: 15px 30px;
-  border-bottom: 1px solid #ddd;
+  justify-content: space-between;
+  gap: 30px;
+  padding: 16px 40px;
+  border-bottom: 1px solid #e5e5e5;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-nav a {
+.navbar-brand {
   text-decoration: none;
-  color: #333;
-  font-size: 16px;
+  color: #111;
+  font-size: 22px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 
-nav a:hover {
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+}
+
+.navbar-links a {
+  text-decoration: none;
+  color: #444;
+  font-size: 15px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navbar-links a:hover {
   color: #007bff;
 }
 
-nav strong {
-  font-size: 20px;
-  margin-right: auto;
+.admin-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-left: 18px;
+  border-left: 1px solid #ddd;
 }
 
-nav button {
+.admin-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #007bff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.logout-btn {
   padding: 8px 15px;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
+  border-radius: 6px;
   background: #333;
   color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
-nav button:hover {
+.logout-btn:hover {
   background: #555;
+}
+
+@media (max-width: 1000px) {
+  .navbar {
+    padding: 15px 20px;
+    align-items: flex-start;
+  }
+
+  .navbar-links {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 14px;
+  }
+
+  .admin-nav {
+    flex-wrap: wrap;
+    border-left: none;
+    padding-left: 0;
+  }
+}
+
+@media (max-width: 650px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .navbar-links {
+    justify-content: flex-start;
+  }
+
+  .admin-nav {
+    width: 100%;
+  }
 }
