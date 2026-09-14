@@ -26,6 +26,8 @@ function Navbar() {
             <>
               <Link to="/admin/dashboard">Admin Dashboard</Link>
               <Link to="/admin/products">Admin Products</Link>
+              <Link to="/admin/orders">Admin Orders</Link>
+              <Link to="/admin/customers">Admin Customers</Link>
             </>
           )}
 

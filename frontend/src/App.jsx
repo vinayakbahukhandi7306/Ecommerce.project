@@ -4,8 +4,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminProducts from "./pages/admin/AdminProducts";
-
-
+import AdminOrders from "./pages/admin/AdminOrders";
+import AdminCustomers from "./pages/admin/AdminCustomers";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -35,6 +35,24 @@ function App() {
               element={
                 <ProtectedRoute adminOnly>
                   <AdminProducts />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/customers"
+              element={
+                <ProtectedRoute adminOnly>
+                  <AdminCustomers />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/admin/orders"
+              element={
+                <ProtectedRoute adminOnly>
+                  <AdminOrders />
                 </ProtectedRoute>
               }
             />
