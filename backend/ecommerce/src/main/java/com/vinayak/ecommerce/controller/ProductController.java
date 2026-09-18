@@ -5,7 +5,7 @@ import com.vinayak.ecommerce.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -20,7 +20,7 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Product> createProduct(
-            @RequestBody Product product) {
+            @Valid @RequestBody Product product) {
 
         Product savedProduct = productService.createProduct(product);
 
@@ -50,7 +50,7 @@ public class ProductController {
     @PutMapping("/{productId}")
     public ResponseEntity<Product> updateProduct(
             @PathVariable Long productId,
-            @RequestBody Product product) {
+            @Valid @RequestBody Product product) {
 
         return ResponseEntity.ok(
                 productService.updateProduct(productId, product)
