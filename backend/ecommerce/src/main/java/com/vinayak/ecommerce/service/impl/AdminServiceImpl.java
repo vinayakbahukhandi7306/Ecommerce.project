@@ -36,7 +36,7 @@ public class AdminServiceImpl implements AdminService {
 
         long totalOrders = orderRepository.count();
 
-        long totalCustomers = userRepository.count();
+        long totalCustomers = userRepository.countByRole(Role.CUSTOMER);
 
         BigDecimal totalRevenue = orderRepository.findAll()
                 .stream()
