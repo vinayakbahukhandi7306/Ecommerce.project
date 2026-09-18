@@ -118,8 +118,30 @@ public class OrderServiceImpl implements OrderService {
                 .orElseThrow(() ->
                         new OrderNotFoundException("Order not found"));
 
-        order.setStatus(status);
+        OrderStatus currentStatus = order.getStatus();
 
+        boolean validTransition =
+                (currentStatus == OrderStatus.PLACED &&
+                        (status == OrderStatus.CONFIRMED ||
+                                status == OrderStatus.CANCELLED))
+
+                        || (currentStatus == OrderStatus.CONFIRMED &&
+                        (status == OrderStatus.SHIPPED ||
+                                status == OrderStatus.CANCELLED))
+
+                        || (currentStatus == OrderStatus.SHIPPED &&
+                        status == OrderStatus.DELIVERED);
+
+        if (!validTransition) {
+            throw new InvalidOrderStatusException(
+                    "Invalid order status transition from "
+                            + currentStatus
+                            + " to "
+                            + status
+            );
+        }
+
+        order.setStatus(status);
         orderRepository.save(order);
     }
 
