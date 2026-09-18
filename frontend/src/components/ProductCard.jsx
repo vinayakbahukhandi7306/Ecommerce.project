@@ -12,6 +12,7 @@ function ProductCard({ product }) {
 
       alert(
         error.response?.data?.message ||
+          error.response?.data ||
           "Failed to add product to cart"
       );
     }

@@ -9,8 +9,8 @@ import com.vinayak.ecommerce.entity.Product;
 import com.vinayak.ecommerce.entity.User;
 import com.vinayak.ecommerce.enums.OrderStatus;
 import com.vinayak.ecommerce.exception.CartNotFoundException;
-import com.vinayak.ecommerce.exception.InvalidOrderStatusException;
 import com.vinayak.ecommerce.exception.InsufficientStockException;
+import com.vinayak.ecommerce.exception.InvalidOrderStatusException;
 import com.vinayak.ecommerce.exception.InvalidQuantityException;
 import com.vinayak.ecommerce.exception.OrderAccessDeniedException;
 import com.vinayak.ecommerce.exception.OrderNotFoundException;
@@ -53,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
 
         User currentUser = securityService.getCurrentUser();
 
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByIdWithLock(productId)
                 .orElseThrow(() ->
                         new ProductNotFoundException("Product not found"));
 
@@ -142,6 +142,7 @@ public class OrderServiceImpl implements OrderService {
         }
 
         order.setStatus(status);
+
         orderRepository.save(order);
     }
 
@@ -213,10 +214,13 @@ public class OrderServiceImpl implements OrderService {
             throw new InvalidQuantityException("Cart is empty");
         }
 
-        // Validate stock for every item first
+        // Lock and validate stock for every item first
         for (CartItem cartItem : cartItems) {
 
-            Product product = cartItem.getProduct();
+            Product product = productRepository
+                    .findByIdWithLock(cartItem.getProduct().getId())
+                    .orElseThrow(() ->
+                            new ProductNotFoundException("Product not found"));
 
             if (product.getStock() < cartItem.getQuantity()) {
                 throw new InsufficientStockException(
@@ -224,6 +228,8 @@ public class OrderServiceImpl implements OrderService {
                                 + product.getName()
                 );
             }
+
+            cartItem.setProduct(product);
         }
 
         // Create orders and reduce stock
