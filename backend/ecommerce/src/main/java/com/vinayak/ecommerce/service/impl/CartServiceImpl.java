@@ -63,7 +63,7 @@ public class CartServiceImpl implements CartService {
 
         User currentUser = securityService.getCurrentUser();
 
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByIdWithLock(productId)
                 .orElseThrow(() ->
                         new ProductNotFoundException("Product not found"));
 
@@ -126,7 +126,7 @@ public class CartServiceImpl implements CartService {
                     "Quantity must be greater than zero");
         }
 
-        Product product = productRepository.findById(productId)
+        Product product = productRepository.findByIdWithLock(productId)
                 .orElseThrow(() ->
                         new ProductNotFoundException(
                                 "Product not found"));
