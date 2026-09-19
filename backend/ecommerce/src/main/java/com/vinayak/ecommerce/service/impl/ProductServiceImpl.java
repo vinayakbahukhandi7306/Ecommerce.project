@@ -5,6 +5,8 @@ import com.vinayak.ecommerce.exception.ProductNotFoundException;
 import com.vinayak.ecommerce.repository.OrderRepository;
 import com.vinayak.ecommerce.repository.ProductRepository;
 import com.vinayak.ecommerce.service.ProductService;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,11 +25,13 @@ public class ProductServiceImpl implements ProductService {
         this.orderRepository = orderRepository;
     }
 
+    @CacheEvict(value = "products", allEntries = true)
     @Override
     public Product createProduct(Product product) {
         return productRepository.save(product);
     }
 
+    @Cacheable("products")
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -40,6 +44,7 @@ public class ProductServiceImpl implements ProductService {
                         new ProductNotFoundException("Product not found"));
     }
 
+    @CacheEvict(value = "products", allEntries = true)
     @Override
     public Product updateProduct(Long productId, Product product) {
 
@@ -54,6 +59,7 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.save(existingProduct);
     }
 
+    @CacheEvict(value = "products", allEntries = true)
     @Override
     public void deleteProduct(Long productId) {
 
