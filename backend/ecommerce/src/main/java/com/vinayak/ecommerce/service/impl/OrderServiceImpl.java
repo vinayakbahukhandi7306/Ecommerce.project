@@ -20,6 +20,8 @@ import com.vinayak.ecommerce.repository.OrderRepository;
 import com.vinayak.ecommerce.repository.ProductRepository;
 import com.vinayak.ecommerce.security.SecurityService;
 import com.vinayak.ecommerce.service.OrderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +31,9 @@ import java.util.List;
 
 @Service
 public class OrderServiceImpl implements OrderService {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(OrderServiceImpl.class);
 
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
@@ -87,6 +92,14 @@ public class OrderServiceImpl implements OrderService {
 
         Order savedOrder = orderRepository.save(order);
 
+        logger.info(
+                "Order created: orderId={}, userId={}, productId={}, quantity={}",
+                savedOrder.getId(),
+                currentUser.getId(),
+                product.getId(),
+                quantity
+        );
+
         return convertToResponse(savedOrder);
     }
 
@@ -144,6 +157,13 @@ public class OrderServiceImpl implements OrderService {
         order.setStatus(status);
 
         orderRepository.save(order);
+
+        logger.info(
+                "Order status updated: orderId={}, from={}, to={}",
+                orderId,
+                currentStatus,
+                status
+        );
     }
 
     @Override
@@ -178,6 +198,12 @@ public class OrderServiceImpl implements OrderService {
 
         productRepository.save(product);
         orderRepository.save(order);
+
+        logger.info(
+                "Order cancelled: orderId={}, userId={}",
+                orderId,
+                currentUser.getId()
+        );
     }
 
     @Override
@@ -268,6 +294,12 @@ public class OrderServiceImpl implements OrderService {
         // Clear cart after successful order creation
         cart.getItems().clear();
         cartRepository.save(cart);
+
+        logger.info(
+                "Checkout completed: userId={}, ordersCreated={}",
+                currentUser.getId(),
+                orderResponses.size()
+        );
 
         return new CheckoutResponse(
                 "Checkout successful",
