@@ -5,6 +5,8 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -14,6 +16,9 @@ import java.io.IOException;
 
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final Logger logger =
+            LoggerFactory.getLogger(JwtAuthenticationFilter.class);
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -58,16 +63,20 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 SecurityContextHolder.getContext()
                                         .setAuthentication(authentication);
 
-                                System.out.println(
-                                        "User Authenticated: " + user.getEmail()
+                                logger.info(
+                                        "User authenticated: {}",
+                                        user.getEmail()
                                 );
                             }
                         });
 
             } catch (Exception e) {
 
-                System.out.println("JWT ERROR: " + e.getClass().getSimpleName());
-                System.out.println("JWT ERROR MESSAGE: " + e.getMessage());
+                logger.warn(
+                        "JWT authentication failed: {} - {}",
+                        e.getClass().getSimpleName(),
+                        e.getMessage()
+                );
 
                 SecurityContextHolder.clearContext();
             }
