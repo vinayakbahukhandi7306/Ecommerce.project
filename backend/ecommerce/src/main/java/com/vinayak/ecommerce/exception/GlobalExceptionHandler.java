@@ -1,14 +1,13 @@
 package com.vinayak.ecommerce.exception;
 
+import com.vinayak.ecommerce.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import com.vinayak.ecommerce.exception.CartNotFoundException;
-import com.vinayak.ecommerce.exception.CartItemNotFoundException;
-import com.vinayak.ecommerce.exception.InvalidOrderStatusException;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,10 +15,17 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
-    public ResponseEntity<String> handleEmailAlreadyExistsException(
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExistsException(
             EmailAlreadyExistsException ex) {
 
-        return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -34,65 +40,89 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        return ResponseEntity.badRequest().body(errors);
+        return ResponseEntity
+                .badRequest()
+                .body(errors);
     }
+
     @ExceptionHandler(OrderAccessDeniedException.class)
-    public ResponseEntity<String> handleOrderAccessDeniedException(
+    public ResponseEntity<ErrorResponse> handleOrderAccessDeniedException(
             OrderAccessDeniedException ex) {
 
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.FORBIDDEN
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.FORBIDDEN.value(),
+                ex.getMessage()
         );
+
+        return ResponseEntity
+                .status(HttpStatus.FORBIDDEN)
+                .body(response);
     }
+
     @ExceptionHandler(ProductNotFoundException.class)
-    public ResponseEntity<String> handleProductNotFoundException(
+    public ResponseEntity<ErrorResponse> handleProductNotFoundException(
             ProductNotFoundException ex) {
 
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.NOT_FOUND
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage()
         );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
     }
 
     @ExceptionHandler(OrderNotFoundException.class)
-    public ResponseEntity<String> handleOrderNotFoundException(
+    public ResponseEntity<ErrorResponse> handleOrderNotFoundException(
             OrderNotFoundException ex) {
 
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.NOT_FOUND
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage()
         );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
     }
 
     @ExceptionHandler(InvalidQuantityException.class)
-    public ResponseEntity<String> handleInvalidQuantityException(
+    public ResponseEntity<ErrorResponse> handleInvalidQuantityException(
             InvalidQuantityException ex) {
 
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.BAD_REQUEST
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage()
         );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
     }
 
     @ExceptionHandler(InsufficientStockException.class)
-    public ResponseEntity<String> handleInsufficientStockException(
+    public ResponseEntity<ErrorResponse> handleInsufficientStockException(
             InsufficientStockException ex) {
 
-        return new ResponseEntity<>(
-                ex.getMessage(),
-                HttpStatus.BAD_REQUEST
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage()
         );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
     }
 
     @ExceptionHandler(CartNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleCartNotFound(
+    public ResponseEntity<ErrorResponse> handleCartNotFound(
             CartNotFoundException ex) {
 
-        Map<String, String> response = new HashMap<>();
-
-        response.put("error", "Cart Not Found");
-        response.put("message", ex.getMessage());
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage()
+        );
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -100,13 +130,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(CartItemNotFoundException.class)
-    public ResponseEntity<Map<String, String>> handleCartItemNotFound(
+    public ResponseEntity<ErrorResponse> handleCartItemNotFound(
             CartItemNotFoundException ex) {
 
-        Map<String, String> response = new HashMap<>();
-
-        response.put("error", "Cart Item Not Found");
-        response.put("message", ex.getMessage());
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage()
+        );
 
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
@@ -114,13 +144,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidOrderStatusException.class)
-    public ResponseEntity<Map<String, String>> handleInvalidOrderStatus(
+    public ResponseEntity<ErrorResponse> handleInvalidOrderStatus(
             InvalidOrderStatusException ex) {
 
-        Map<String, String> response = new HashMap<>();
-
-        response.put("error", "Invalid Order Status");
-        response.put("message", ex.getMessage());
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.BAD_REQUEST.value(),
+                ex.getMessage()
+        );
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -128,13 +158,13 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(IllegalStateException.class)
-    public ResponseEntity<Map<String, String>> handleIllegalStateException(
+    public ResponseEntity<ErrorResponse> handleIllegalStateException(
             IllegalStateException ex) {
 
-        Map<String, String> response = new HashMap<>();
-
-        response.put("error", "Operation Conflict");
-        response.put("message", ex.getMessage());
+        ErrorResponse response = new ErrorResponse(
+                HttpStatus.CONFLICT.value(),
+                ex.getMessage()
+        );
 
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
