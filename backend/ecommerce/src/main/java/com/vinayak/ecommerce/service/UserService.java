@@ -10,4 +10,5 @@ public interface UserService {
 
     AuthResponse login(LoginRequest request);
 
+    void verifyEmail(String email);
 }

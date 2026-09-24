@@ -41,6 +41,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private Role role;
 
+    @Column(nullable = false)
+    private boolean emailVerified;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(
@@ -70,7 +73,7 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return emailVerified;
     }
 
     public Long getId() {
@@ -122,6 +125,14 @@ public class User implements UserDetails {
         this.role = role;
     }
 
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -130,6 +141,7 @@ public class User implements UserDetails {
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", role=" + role +
+                ", emailVerified=" + emailVerified +
                 '}';
     }
 }
