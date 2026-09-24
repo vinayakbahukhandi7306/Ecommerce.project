@@ -22,14 +22,19 @@ function Register() {
         password,
       });
 
-      alert("Registration successful! Please login.");
+      alert(
+        "Registration successful! An OTP has been sent to your email."
+      );
 
-      navigate("/login");
+      navigate("/verify-otp", {
+        state: { email },
+      });
     } catch (error) {
       console.error(error);
 
       alert(
         error.response?.data?.message ||
+          error.response?.data ||
           "Registration failed"
       );
     }

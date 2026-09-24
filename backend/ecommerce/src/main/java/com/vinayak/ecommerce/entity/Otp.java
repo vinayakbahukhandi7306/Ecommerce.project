@@ -1,7 +1,6 @@
 package com.vinayak.ecommerce.entity;
 
 import jakarta.persistence.*;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,6 +16,9 @@ public class Otp {
 
     @Column(nullable = false)
     private String otpHash;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
     private LocalDateTime expiresAt;
@@ -45,6 +47,14 @@ public class Otp {
 
     public void setOtpHash(String otpHash) {
         this.otpHash = otpHash;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public LocalDateTime getExpiresAt() {

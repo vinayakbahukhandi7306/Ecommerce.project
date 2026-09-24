@@ -13,6 +13,9 @@ import Products from "./pages/Products";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Orders from "./pages/Orders";
+import VerifyOtp from "./pages/VerifyOtp";
+
+
 
 function App() {
   return (
@@ -21,6 +24,7 @@ function App() {
         <Navbar />
 
         <Routes>
+            <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route
               path="/admin/dashboard"
               element={

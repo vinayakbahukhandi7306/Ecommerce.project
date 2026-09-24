@@ -16,6 +16,7 @@ public class OtpServiceImpl implements OtpService {
 
     private static final int OTP_EXPIRY_MINUTES = 5;
     private static final int MAX_ATTEMPTS = 5;
+    private static final int RESEND_COOLDOWN_SECONDS = 60;
 
     private final OtpRepository otpRepository;
     private final PasswordEncoder passwordEncoder;
@@ -42,12 +43,15 @@ public class OtpServiceImpl implements OtpService {
                 secureRandom.nextInt(1_000_000)
         );
 
+        LocalDateTime now = LocalDateTime.now();
+
         Otp otpEntity = new Otp();
 
         otpEntity.setEmail(email);
         otpEntity.setOtpHash(passwordEncoder.encode(otp));
+        otpEntity.setCreatedAt(now);
         otpEntity.setExpiresAt(
-                LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES)
+                now.plusMinutes(OTP_EXPIRY_MINUTES)
         );
         otpEntity.setAttempts(0);
         otpEntity.setUsed(false);
@@ -60,6 +64,30 @@ public class OtpServiceImpl implements OtpService {
                 "Your OTP is: " + otp +
                         "\n\nThis OTP will expire in 5 minutes."
         );
+    }
+
+    @Override
+    @Transactional
+    public void resendOtp(String email) {
+
+        Otp latestOtp = otpRepository
+                .findTopByEmailOrderByIdDesc(email)
+                .orElse(null);
+
+        if (latestOtp != null) {
+
+            LocalDateTime resendAvailableAt =
+                    latestOtp.getCreatedAt()
+                            .plusSeconds(RESEND_COOLDOWN_SECONDS);
+
+            if (LocalDateTime.now().isBefore(resendAvailableAt)) {
+                throw new IllegalStateException(
+                        "Please wait before requesting another OTP"
+                );
+            }
+        }
+
+        generateAndSendOtp(email);
     }
 
     @Override
@@ -86,9 +114,14 @@ public class OtpServiceImpl implements OtpService {
             return false;
         }
 
-        otpEntity.setAttempts(otpEntity.getAttempts() + 1);
+        otpEntity.setAttempts(
+                otpEntity.getAttempts() + 1
+        );
 
-        if (!passwordEncoder.matches(otp, otpEntity.getOtpHash())) {
+        if (!passwordEncoder.matches(
+                otp,
+                otpEntity.getOtpHash()
+        )) {
             otpRepository.save(otpEntity);
             return false;
         }

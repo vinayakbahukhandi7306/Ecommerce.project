@@ -1,0 +1,35 @@
+.verify-email {
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 20px;
+  word-break: break-word;
+}
+
+.auth-error {
+  color: #dc2626;
+  font-size: 14px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.auth-success {
+  color: #16a34a;
+  font-size: 14px;
+  margin: 10px 0;
+  text-align: center;
+}
+
+.resend-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  background: transparent;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.resend-btn:hover {
+  background: #f5f5f5;
+}
